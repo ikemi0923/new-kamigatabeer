@@ -50,11 +50,11 @@ Route::prefix('master/hops')->group(function () {
 
 Route::prefix('master/auxiliary_raw_materials')->group(function () {
     Route::get('/', [AuxiliaryRawMaterialController::class, 'index']);
-    Route::get('/create', [AuxiliaryRawMaterialController::class, 'show']);
-    Route::post('/add', [AuxiliaryRawMaterialController::class, 'add']);
-    Route::get('/edit/{id}', [AuxiliaryRawMaterialController::class, 'edit']);
-    Route::post('/finish/{id}', [AuxiliaryRawMaterialController::class, 'finish']);
-    Route::post('/delete/{id}', [AuxiliaryRawMaterialController::class, 'delete']);
+    Route::get('/create', [AuxiliaryRawMaterialController::class, 'create']);
+    Route::post('/', [AuxiliaryRawMaterialController::class, 'store']);
+    Route::get('/{id}/edit', [AuxiliaryRawMaterialController::class, 'edit']);
+    Route::put('/{id}', [AuxiliaryRawMaterialController::class, 'update']);
+    Route::delete('/{id}', [AuxiliaryRawMaterialController::class, 'destroy']);
 });
 
 Route::prefix('master/yeasts')->group(function () {

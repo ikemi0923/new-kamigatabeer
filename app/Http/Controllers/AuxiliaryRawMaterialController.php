@@ -14,12 +14,12 @@ class AuxiliaryRawMaterialController extends Controller
         return view('masters.auxiliary_raw_materials.index', compact('auxiliary_raw_materials'));
     }
 
-    public function show()
+    public function create()
     {
         return view('masters.auxiliary_raw_materials.create');
     }
 
-    public function add(Request $request)
+    public function store(Request $request)
     {
         $rules = [
             'name' => 'required|string|max:20',
@@ -37,7 +37,7 @@ class AuxiliaryRawMaterialController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return redirect('/master/auxiliary_raw_materials/create')
+            return redirect()->route('auxiliary_raw_materials.create')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -48,7 +48,7 @@ class AuxiliaryRawMaterialController extends Controller
             'auxiliary_raw_material_display_flg' => $request->has('auxiliary_raw_material_display_flg') ? 1 : 0,
         ]);
 
-        return redirect('/master/auxiliary_raw_materials')->with('msg', '正しく登録されました');
+        return redirect()->route('auxiliary_raw_materials.index')->with('msg', '正しく登録されました');
     }
 
     public function edit($id)
@@ -57,7 +57,7 @@ class AuxiliaryRawMaterialController extends Controller
         return view('masters.auxiliary_raw_materials.edit', compact('auxiliary_raw_material'));
     }
 
-    public function finish($id, Request $request)
+    public function update(Request $request, $id)
     {
         $rules = [
             'name' => 'required|string|max:20',
@@ -75,7 +75,7 @@ class AuxiliaryRawMaterialController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return redirect('/master/auxiliary_raw_materials/edit/' . $id)
+            return redirect()->route('auxiliary_raw_materials.edit', $id)
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -87,12 +87,12 @@ class AuxiliaryRawMaterialController extends Controller
             'auxiliary_raw_material_display_flg' => $request->has('auxiliary_raw_material_display_flg') ? 1 : 0,
         ]);
 
-        return redirect('/master/auxiliary_raw_materials')->with('msg', '正しく更新されました');
+        return redirect()->route('auxiliary_raw_materials.index')->with('msg', '正しく更新されました');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         AuxiliaryRawMaterial::destroy($id);
-        return redirect('/master/auxiliary_raw_materials')->with('msg', '削除が完了しました');
+        return redirect()->route('auxiliary_raw_materials.index')->with('msg', '削除が完了しました');
     }
 }
