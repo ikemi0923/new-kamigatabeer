@@ -2,81 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tank;
 use Illuminate\Http\Request;
-use App\Tanks;
-use Illuminate\Support\Facades\Validator;
 
 class TankController extends Controller
 {
-    function index()
+    public function index()
     {
-        $tanks = Tanks::all();
-        return view('masters.tanks', ['tanks' => $tanks]);
+        $tanks = Tank::all();
+        return view('masters.tanks.index', compact('tanks'));
     }
 
-    function show()
+    public function create()
     {
-        $tanks = Tanks::all();
-        return view('masters.tanks.create', ['tanks' => $tanks]);
+        return view('masters.tanks.create');
     }
 
-    public function add(Request $request)
+    public function store(Request $request)
     {
-        $rules = [
+        $validated = $request->validate([
             'name' => 'required|string|max:20',
-        ];
-        $message = [
-            'name.required' => '名前を20字以内で入力してください',
-            'name.max' => '名前は20文字以内で入力してください',
-        ];
-        $tank = Validator::make($request->all(), $rules, $message);
-        if ($tank->fails()) {
-            return redirect('/masters/tanks/create')
-                ->withErrors($tank)
-                ->withInput();
-        } else {
-            $post = new Tanks();
-            $post->name = $request->name;
-            $post->save();
-            return view('masters.tanks.create', ['msg' => '正しく入力されました']);
-        }
+        ], [
+            'name.required' => 'タンク名は必須です',
+            'name.max' => 'タンク名は20文字以内で入力してください',
+        ]);
+
+        Tank::create($validated);
+
+        return redirect()->route('tanks.index')->with('msg', '保存しました');
     }
 
-    public function edit($id, Request $request)
+    public function edit($id)
     {
-        $tank = Tanks::findOrFail($id);
-        return view('masters.tanks.edit', ['tank' =>  $tank,]);
+        $tank = Tank::findOrFail($id);
+        return view('masters.tanks.edit', compact('tank'));
     }
 
-    public function finish($id, Request $request)
+    public function update(Request $request, $id)
     {
-        $rules = [
+        $validated = $request->validate([
             'name' => 'required|string|max:20',
-        ];
+        ], [
+            'name.required' => 'タンク名は必須です',
+            'name.max' => 'タンク名は20文字以内で入力してください',
+        ]);
+        
+        $tank = Tank::findOrFail($id);
+        $tank->update($validated);
 
-        $message = [
-            'name.required' => '名前を20字以内で入力してください',
-            'name.max' => '名前は20文字以内で入力してください',
-        ];
-
-        $tank = Validator::make($request->all(), $rules, $message);
-        if ($tank->fails()) {
-            return redirect('masters.tanks.create')
-                ->withErrors($tank)
-                ->withInput();
-        } else {
-            $tank = Tanks::findOrFail($id);
-            $tank->name = $request->name;
-            $tank->save();
-            return view('masters.tanks.create', ['msg' => '正しく入力されました']);
-        }
+        return redirect()->route('tanks.index')->with('msg', '更新しました');
     }
 
-
-    function delete($id, Request $request)
+    public function destroy($id)
     {
-        $db_data = new Tanks;
-        $db_data->destroy(1);
+        Tank::findOrFail($id)->delete();
+        return redirect()->route('tanks.index')->with('msg', '削除しました');
     }
-
 }

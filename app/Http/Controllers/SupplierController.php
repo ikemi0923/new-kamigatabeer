@@ -3,90 +3,108 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Suppliers;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
-    function index()
+    public function index()
     {
-        $suppliers = Suppliers::all();
-        return view('masters.suppliers', ['suppliers' => $suppliers]);
+        $suppliers = Supplier::all();
+        return view('masters.suppliers.index', compact('suppliers'));
     }
 
-    function show()
+    public function create()
     {
-        $suppliers = Suppliers::all();
-        return view('masters.suppliers.create', ['suppliers' => $suppliers]);
+        return view('masters.suppliers.create');
     }
 
-    public function add(Request $request)
-    {
-        $rules = [
-            'name' => 'required|string|max:20',
-            'kinds' => 'required|string|max:20',
-        ];
-        $message = [
-            'name.required' => '名前を20字以内で入力してください',
-            'kinds.required' => '種類を20字以内で入力してください',
-            'name.max' => '名前は20文字以内で入力してください',
-            'kinds.max' => '種類は20文字以内で入力してください',
-        ];
-        $supplier = Validator::make($request->all(), $rules, $message);
-        if ($supplier->fails()) {
-            return redirect('/masters/suppliers/create')
-                ->withErrors($supplier)
-                ->withInput();
-        } else {
-            $post = new Suppliers();
-            $post->name = $request->name;
-            $post->kinds = $request->kinds;
-            $post->save();
-            return view('masters.suppliers.create', ['msg' => '正しく入力されました']);
-        }
-    }
-
-    public function edit($id, Request $request)
-    {
-        $supplier = Suppliers::findOrFail($id);
-        return view('masters.suppliers.edit', ['supplier' =>  $supplier,]);
-    }
-
-    public function finish($id, Request $request)
+    public function store(Request $request)
     {
         $rules = [
             'name' => 'required|string|max:20',
-            'maker' => 'required|string|max:20',
-            'yeast_display_flg' => 'boolean',
+            'type' => 'required|string|max:20',
+            'category' => 'required|string|max:20',
+            // 'display_flg' => 'boolean',
         ];
 
-        $message = [
-            'name.required' => '名前を20字以内で入力してください',
-            'maker.required' => 'メーカーを20字以内で入力してください',
-            'yeast_display_flg' => 'チェックを入力してください',
+        $messages = [
+            'name.required' => '名前は必須です',
             'name.max' => '名前は20文字以内で入力してください',
-            'maker.max' => 'メーカーは20文字以内で入力してください',
+        
+            'type.required' => '種類は必須です',
+            'type.max' => '種類は20文字以内で入力してください',
+        
+            'category.required' => '区分は必須です',
+            'category.max' => '区分は20文字以内で入力してください',
+        ];
+        
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return redirect('/master/suppliers/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        Supplier::create([
+            'name' => $request->name,
+            'type' => $request->type,
+            'category' => $request->category,
+            // 'display_flg' => $request->has('display_flg') ? 1 : 0,
+        ]);        
+
+        return redirect('/master/suppliers')->with('msg', '保存しました');
+    }
+
+    public function edit($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        return view('masters.suppliers.edit', compact('supplier'));
+    }
+
+    public function update($id, Request $request)
+    {
+        $rules = [
+            'name' => 'required|string|max:20',
+            'type' => 'required|string|max:20',
+            'category' => 'required|string|max:20',
+            // 'display_flg' => 'boolean',
         ];
 
-        $supplier = Validator::make($request->all(), $rules, $message);
-        if ($supplier->fails()) {
-            return redirect('masters.suppliers.create')
-                ->withErrors($supplier)
+        $messages = [
+            'name.required' => '名前は必須です',
+            'name.max' => '名前は20文字以内で入力してください',
+        
+            'type.required' => '種類は必須です',
+            'type.max' => '種類は20文字以内で入力してください',
+        
+            'category.required' => '区分は必須です',
+            'category.max' => '区分は20文字以内で入力してください',
+        ];
+        
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return redirect("/master/suppliers/{$id}/edit")
+                ->withErrors($validator)
                 ->withInput();
-        } else {
-            $supplier = Suppliers::findOrFail($id);
-            $supplier->name = $request->name;
-            $supplier->kinds = $request->kinds;
-            $supplier->save();
-            return view('masters.suppliers.create', ['msg' => '正しく入力されました']);
         }
+
+        $supplier = Supplier::findOrFail($id);
+        $supplier->update([
+            'name' => $request->name,
+            'type' => $request->type,
+            'category' => $request->category,
+            // 'display_flg' => $request->has('display_flg') ? 1 : 0,
+        ]);
+
+        return redirect('/master/suppliers')->with('msg', '更新しました');
     }
 
-
-    function delete($id, Request $request)
+    public function destroy($id)
     {
-        $db_data = new Suppliers;
-        $db_data->destroy(1);
+        Supplier::destroy($id);
+        return redirect('/master/suppliers')->with('msg', '削除しました');
     }
-
 }

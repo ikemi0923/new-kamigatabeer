@@ -1,0 +1,76 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+
+  {{-- 成功メッセージ --}}
+  @if (session('msg'))
+    <script>alert(@json(session('msg')));</script>
+  @endif
+
+  {{-- バリデーションエラー --}}
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  {{-- 編集フォーム --}}
+  <form method="POST" action="{{ route('items.update', $item->id) }}" id="editForm">
+    @csrf
+    @method('PUT')
+
+    <div class="d-flex justify-content-start mb-3">
+      <div class="mr-auto">
+        <span class="span-header">商品の編集</span>
+      </div>
+      <div class="align-self-center mr-3">
+        <button type="submit" class="btn btn-primary" style="width: 8rem;">保存</button>
+      </div>
+      <div class="align-self-center">
+        <a href="{{ route('items.index') }}" class="btn btn-dark">戻る</a>
+      </div>
+    </div>
+
+    <div class="form-group row justify-content-center">
+      <label class="col-sm-2 col-form-label text-right">商品名</label>
+      <div class="col-sm-6">
+        <input type="text" name="name" class="form-control" value="{{ old('name', $item->name) }}">
+      </div>
+    </div>
+
+    <div class="form-group row justify-content-center">
+      <label class="col-sm-2 col-form-label text-right">ビアスタイル</label>
+      <div class="col-sm-6">
+        <input type="text" name="beer_style" class="form-control" value="{{ old('beer_style', $item->beer_style) }}">
+      </div>
+    </div>
+
+    <div class="form-group row justify-content-center">
+      <label class="col-sm-2 col-form-label text-right">ABV（%）</label>
+      <div class="col-sm-6">
+        <input type="number" step="0.1" name="abv" class="form-control" value="{{ old('abv', $item->abv) }}">
+      </div>
+    </div>
+
+    <div class="form-group row justify-content-center">
+      <label class="col-sm-2 col-form-label text-right">IBU</label>
+      <div class="col-sm-6">
+        <input type="number" name="ibu" class="form-control" value="{{ old('ibu', $item->ibu) }}">
+      </div>
+    </div>
+  </form>
+
+  {{-- 削除ボタン --}}
+  <form method="POST" action="{{ route('items.destroy', $item->id) }}" onsubmit="return confirm('本当に削除しますか？');" class="mt-3">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">削除</button>
+  </form>
+
+</div>
+@endsection

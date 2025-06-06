@@ -3,96 +3,94 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Yeasts;
+use App\Models\Yeasts;
 use Illuminate\Support\Facades\Validator;
 
 class YeastController extends Controller
 {
-    function index()
+    public function index()
     {
-        $yeasts = Yeasts::all();
-        return view('masters.yeasts', ['yeasts' => $yeasts]);
+        $yeasts = Yeasts::paginate(10);
+        return view('masters.yeasts.index', compact('yeasts'));
     }
 
-    function show()
+    public function create()
     {
-        $yeasts = Yeasts::all();
-        return view('masters.yeasts.create', ['yeasts' => $yeasts]);
+        return view('masters.yeasts.create');
     }
 
-    public function add(Request $request)
+    public function store(Request $request)
     {
         $rules = [
             'name' => 'required|string|max:20',
             'maker' => 'required|string|max:20',
-            'yeast_display_flg' => 'boolean',
+            'yeast_display_flg' => 'nullable|boolean',
         ];
-        $message = [
+
+        $messages = [
             'name.required' => '名前を20字以内で入力してください',
             'maker.required' => 'メーカーを20字以内で入力してください',
-            'yeast_display_flg' => 'チェックを入力してください',
             'name.max' => '名前は20文字以内で入力してください',
             'maker.max' => 'メーカーは20文字以内で入力してください',
         ];
-        $yeast = Validator::make($request->all(), $rules, $message);
-        if ($yeast->fails()) {
-            return redirect('/masters/yeasts/create')
-                ->withErrors($yeast)
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return redirect('/master/yeasts/create')
+                ->withErrors($validator)
                 ->withInput();
-        } else {
-            $post = new Yeasts();
-            $post->name = $request->name;
-            $post->maker = $request->maker;
-            $post->yeast_display_flg = 1;
-            $post->save();
-            return view('masters.yeasts.create', ['msg' => '正しく入力されました']);
         }
+
+        Yeasts::create([
+            'name' => $request->name,
+            'maker' => $request->maker,
+            'yeast_display_flg' => $request->has('yeast_display_flg') ? 1 : 0,
+        ]);
+
+        return redirect('/master/yeasts')->with('msg', '保存しました');
     }
 
-    public function edit($id, Request $request)
+    public function edit($id)
     {
         $yeast = Yeasts::findOrFail($id);
-        return view('masters.yeasts.edit', ['yeast' =>  $yeast,]);
+        return view('masters.yeasts.edit', compact('yeast'));
     }
 
-    public function finish($id, Request $request)
+    public function update($id, Request $request)
     {
         $rules = [
             'name' => 'required|string|max:20',
             'maker' => 'required|string|max:20',
-            'yeast_display_flg' => 'boolean',
+            'yeast_display_flg' => 'nullable|boolean',
         ];
 
-        $message = [
+        $messages = [
             'name.required' => '名前を20字以内で入力してください',
             'maker.required' => 'メーカーを20字以内で入力してください',
-            'yeast_display_flg' => 'チェックを入力してください',
             'name.max' => '名前は20文字以内で入力してください',
             'maker.max' => 'メーカーは20文字以内で入力してください',
         ];
 
-        $yeast = Validator::make($request->all(), $rules, $message);
-        if ($yeast->fails()) {
-            return redirect('masters.yeasts.create')
-                ->withErrors($yeast)
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return redirect("/master/yeasts/{$id}/edit")
+                ->withErrors($validator)
                 ->withInput();
-        } else {
-            $yeast = Yeasts::findOrFail($id);
-            $yeast->name = $request->name;
-            $yeast->maker = $request->maker;
-            $yeast->yeast_display_flg = $request->yeasts_display_flg;
-            $yeast->save();
-            return view('masters.yeasts.create', ['msg' => '正しく入力されました']);
         }
+
+        $yeast = Yeasts::findOrFail($id);
+        $yeast->update([
+            'name' => $request->name,
+            'maker' => $request->maker,
+            'yeast_display_flg' => $request->has('yeast_display_flg') ? 1 : 0,
+        ]);
+
+        return redirect('/master/yeasts')->with('msg', '更新しました');
     }
 
-
-    function delete($id, Request $request)
+    public function destroy($id)
     {
-        $db_data = new Yeasts;
-        $db_data->destroy(1);
+        Yeasts::destroy($id);
+        return redirect('/master/yeasts')->with('msg', '削除しました');
     }
-
 }
-
-

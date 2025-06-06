@@ -3,97 +3,90 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Symbols;
+use App\Models\Symbol;
+use App\Models\Store;
 use Illuminate\Support\Facades\Validator;
 
 class SymbolController extends Controller
 {
-    function index()
+    public function index()
     {
-        $symbols = Symbols::all();
-
-        return view('masters.symbols', ['symbols' => $symbols]);
+        $symbols = Symbol::with('stores')->get();
+        return view('masters.symbols.index', compact('symbols'));
     }
 
-    function show()
+    public function create()
     {
-        $symbols = Symbols::all();
-
-        return view('masters.symbols.create', ['symbols' => $symbols]);
+        $stores = Store::all();
+        return view('masters.symbols.create', compact('stores'));
     }
 
-
-
-    public function add(Request $request)
+    public function store(Request $request)
     {
-        $rules = [
+        $validated = $request->validate([
             'name' => 'required|string|max:20',
             'brand' => 'required|string|max:20',
             'item_id' => 'required|numeric|min:0|max:99999',
-        ];
-        $message = [
-            'name.required' => '名称を20字以内で入力してください',
-            'brand.required' => '銘柄を20字以内で入力してください',
-            'item_id.required' => '品目を入力してください',
+            'store_ids' => 'array',
+        ], [
+            'name.required' => '名称は必須です',
             'name.max' => '名称は20文字以内で入力してください',
+            'brand.required' => '銘柄は必須です',
             'brand.max' => '銘柄は20文字以内で入力してください',
-        ];
-        $symbol = Validator::make($request->all(), $rules, $message);
-        if ($symbol->fails()) {
-            return redirect('/masters/symbols/create')
-                ->withErrors($symbol)
-                ->withInput();
-        } else {
-            $post = new Symbols();
-            $post->name = $request->name;
-            $post->brand = $request->brand;
-            $post->item_id = $request->item_od;
-            $post->save();
-            return view('/masters/symbols/create', ['msg' => '正しく入力されました']);
+            'item_id.required' => '品目は必須です',
+            'item_id.numeric' => '品目は数値で入力してください',
+            'item_id.min' => '品目は0以上で入力してください',
+            'item_id.max' => '品目は99999以下で入力してください',
+        ]);
+        
+
+        $symbol = Symbol::create($validated);
+
+        if ($request->has('store_ids')) {
+            $symbol->stores()->attach($request->input('store_ids'));
         }
+
+        return redirect()->route('symbols.index')->with('msg', '保存しました');
     }
 
-
-    public function edit($id, Request $request)
+    public function edit($id)
     {
-        $symbols = Symbols::findOrFail($id);
-        return view('masters.symbols.edit', ['symbol' => $symbols]);
+        $symbol = Symbol::findOrFail($id);
+        $stores = Store::all();
+        $selected = $symbol->stores->pluck('id')->toArray();
+
+        return view('masters.symbols.edit', compact('symbol', 'stores', 'selected'));
     }
 
-    public function finish($id, Request $request)
+    public function update(Request $request, $id)
     {
-        $rules = [
+        $validated = $request->validate([
             'name' => 'required|string|max:20',
             'brand' => 'required|string|max:20',
             'item_id' => 'required|numeric|min:0|max:99999',
-        ];
-        $message = [
-            'name.required' => '名称を20字以内で入力してください',
-            'brand.required' => '銘柄を20字以内で入力してください',
-            'item_id.required' => '品目を入力してください',
+            'store_ids' => 'array',
+        ], [
+            'name.required' => '名称は必須です',
             'name.max' => '名称は20文字以内で入力してください',
+            'brand.required' => '銘柄は必須です',
             'brand.max' => '銘柄は20文字以内で入力してください',
-        ];
+            'item_id.required' => '品目は必須です',
+            'item_id.numeric' => '品目は数値で入力してください',
+            'item_id.min' => '品目は0以上で入力してください',
+            'item_id.max' => '品目は99999以下で入力してください',
+        ]);
+        
 
-        $symbol = Validator::make($request->all(), $rules, $message);
-        if ($symbol->fails()) {
-            return redirect('/masters/symbols/create')
-                ->withErrors($symbol)
-                ->withInput();
-        } else {
-            $symbol = Symbols::findOrFail($id);
-            $symbol->name = $request->name;
-            $symbol->brand = $request->brand;
-            $symbol->item_id = $request->item_id;
-            $symbol->save();
-            return view('/masters/symbols/create', ['msg' => '正しく入力されました']);
-        }
+        $symbol = Symbol::findOrFail($id);
+        $symbol->update($validated);
+        $symbol->stores()->sync($request->input('store_ids', []));
+
+        return redirect()->route('symbols.index')->with('msg', '更新しました');
     }
 
-    function delete($id, Request $request)
+    public function destroy($id)
     {
-        $db_data = new Symbols;
-        $db_data->destroy(1);
+        Symbol::findOrFail($id)->delete();
+        return redirect()->route('symbols.index')->with('msg', '削除しました');
     }
-
 }

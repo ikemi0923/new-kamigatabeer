@@ -1,321 +1,162 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MaltController;
+use App\Http\Controllers\HopController;
+use App\Http\Controllers\AuxiliaryRawMaterialController;
+use App\Http\Controllers\YeastController;
+use App\Http\Controllers\WheatRiceSugarController;
+use App\Http\Controllers\ProductContainerController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\BasicInformationController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\SymbolController;
+use App\Http\Controllers\TankController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UserController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+// ログイン関係
+Route::get('/', [LoginController::class, 'showLoginForm']);
+Route::post('/login', [LoginController::class, 'login']);
 
-// 麦芽
+// メニュー画面
+Route::get('/menu', [MenuController::class, 'index']);
 
-Route::get('/masters/malts', function () {
-    return view('masters.malts');
+// マスター管理メニュー画面
+Route::get('/master', function () {
+    return view('masters.masters');
 });
 
-Route::get('/masters/create', function () {
-    return view('masters.create');
+Route::prefix('master/malts')->group(function () {
+    Route::get('/', [MaltController::class, 'index']);
+    Route::get('/create', [MaltController::class, 'create']);
+    Route::post('/', [MaltController::class, 'store']);
+    Route::get('/{id}/edit', [MaltController::class, 'edit']);
+    Route::put('/{id}', [MaltController::class, 'update']);
+    Route::delete('/{id}', [MaltController::class, 'destroy']);
 });
 
-Route::get('/masters/malts/add', function () {
-    return view('masters.malts.add');
+Route::prefix('master/hops')->group(function () {
+    Route::get('/', [HopController::class, 'index'])->name('hops.index');
+    Route::get('/create', [HopController::class, 'create'])->name('hops.create');
+    Route::post('/', [HopController::class, 'store'])->name('hops.store');
+    Route::get('/{id}/edit', [HopController::class, 'edit'])->name('hops.edit');
+    Route::put('/{id}', [HopController::class, 'update'])->name('hops.update');
+    Route::delete('/{id}', [HopController::class, 'destroy'])->name('hops.destroy');
 });
 
-Route::get('/masters/malts', 'MaltController@index');
-
-Route::get('/masters/malts/create', 'MaltController@show');
-
-Route::post('/masters/malts/add', 'MaltController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/malts/create');
-})->name('/masters/malts/create');
-
-Route::get('/masters/malts/finish', function () {
-    return view('masters.malts.finish');
+Route::prefix('master/auxiliary_raw_materials')->group(function () {
+    Route::get('/', [AuxiliaryRawMaterialController::class, 'index']);
+    Route::get('/create', [AuxiliaryRawMaterialController::class, 'show']);
+    Route::post('/add', [AuxiliaryRawMaterialController::class, 'add']);
+    Route::get('/edit/{id}', [AuxiliaryRawMaterialController::class, 'edit']);
+    Route::post('/finish/{id}', [AuxiliaryRawMaterialController::class, 'finish']);
+    Route::post('/delete/{id}', [AuxiliaryRawMaterialController::class, 'delete']);
 });
 
-Route::get('/masters/malts/edit/{id}', 'MaltController@edit');
-
-Route::post('/masters/malts/finish/{id}', 'MaltController@finish');
-
-Route::post('/masters/malts/delete/{id}', 'MaltController@delete');
-
-
-// ホップ
-
-Route::get('/masters/hops', function () {
-    return view('masters.hops');
+Route::prefix('master/yeasts')->group(function () {
+    Route::get('/', [YeastController::class, 'index']);
+    Route::get('/create', [YeastController::class, 'create']);
+    Route::post('/', [YeastController::class, 'store']);
+    Route::get('/{id}/edit', [YeastController::class, 'edit']);
+    Route::put('/{id}', [YeastController::class, 'update']);
+    Route::delete('/{id}', [YeastController::class, 'destroy']);
 });
 
-Route::get('/masters/hops/create', function () {
-    return view('masters.hops.create');
+Route::prefix('master/wheat_rice_sugars')->group(function () {
+    Route::get('/', [WheatRiceSugarController::class, 'index'])->name('wheat_rice_sugars.index');
+    Route::get('/create', [WheatRiceSugarController::class, 'create'])->name('wheat_rice_sugars.create');
+    Route::post('/', [WheatRiceSugarController::class, 'store'])->name('wheat_rice_sugars.store');
+    Route::get('/{id}/edit', [WheatRiceSugarController::class, 'edit'])->name('wheat_rice_sugars.edit');
+    Route::put('/{id}', [WheatRiceSugarController::class, 'update'])->name('wheat_rice_sugars.update');
+    Route::delete('/{id}', [WheatRiceSugarController::class, 'destroy'])->name('wheat_rice_sugars.destroy');
 });
 
-Route::get('/masters/hops/add', function () {
-    return view('masters.hops.add');
+Route::prefix('master/product_containers')->group(function () {
+    Route::get('/', [ProductContainerController::class, 'index'])->name('product_containers.index');
+    Route::get('/create', [ProductContainerController::class, 'create'])->name('product_containers.create');
+    Route::post('/', [ProductContainerController::class, 'store'])->name('product_containers.store');
+    Route::get('/{id}/edit', [ProductContainerController::class, 'edit'])->name('product_containers.edit');
+    Route::put('/{id}', [ProductContainerController::class, 'update'])->name('product_containers.update');
+    Route::delete('/{id}', [ProductContainerController::class, 'destroy'])->name('product_containers.destroy');
 });
 
-Route::get('/masters/hops', 'HopController@index');
-
-Route::get('/masters/hops/create', 'HopController@show');
-
-Route::post('/masters/hops/add', 'HopController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/hops/create');
-})->name('/masters/hops/create');
-
-Route::get('/masters/hops/finish', function () {
-    return view('masters.hops.finish');
+Route::prefix('master/suppliers')->group(function () {
+    Route::get('/', [SupplierController::class, 'index'])->name('suppliers.index');
+    Route::get('/create', [SupplierController::class, 'create'])->name('suppliers.create');
+    Route::post('/', [SupplierController::class, 'store'])->name('suppliers.store');
+    Route::get('/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::put('/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::delete('/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
 });
 
-Route::get('/masters/hops/edit/{id}', 'HopController@edit');
-
-Route::post('/masters/hops/finish/{id}', 'HopController@finish');
-
-Route::post('/masters/hops/delete/{id}', 'HopController@delete');
-
-// 酵母
-
-Route::get('/masters/yeasts', function () {
-    return view('masters.yeasts');
+Route::prefix('master')->group(function () {
+    Route::get('basic_informations', [BasicInformationController::class, 'index'])->name('basic_information.index');
+    Route::put('basic_informations', [BasicInformationController::class, 'update'])->name('basic_information.update');
 });
 
-Route::get('/masters/yeasts/create', function () {
-    return view('masters.yeasts.create');
+Route::prefix('master/employees')->group(function () {
+    Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::post('/', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+    Route::put('/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 });
 
-// Route::get('/masters/yeasts/add', function () {
-//     return view('masters.yeasts.add');
-// });
-
-Route::get('/masters/yeasts', 'YeastController@index');
-
-Route::get('/masters/yeasts/create', 'YeastController@show');
-
-Route::post('/masters/yeasts/create', 'YeastController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/yeasts/create');
-})->name('/masters/yeasts/create');
-
-Route::get('/masters/yeasts/finish', function () {
-    return view('masters.yeasts.finish');
+Route::prefix('master/employees')->group(function () {
+    Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::post('/', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+    Route::put('/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 });
 
-Route::get('/masters/yeasts/edit/{id}', 'YeastController@edit');
-
-Route::post('/masters/yeasts/finish/{id}', 'YeastController@finish');
-
-Route::post('/masters/yeasts/delete/{id}', 'YeastController@delete');
-
-// 米麦糖類
-
-Route::get('/masters/wheat_rice_sugars', function () {
-    return view('masters.wheat_rice_sugars');
+Route::prefix('master/stores')->group(function () {
+    Route::get('/', [StoreController::class, 'index'])->name('stores.index');
+    Route::get('/create', [StoreController::class, 'create'])->name('stores.create');
+    Route::post('/', [StoreController::class, 'store'])->name('stores.store');
+    Route::get('/{id}/edit', [StoreController::class, 'edit'])->name('stores.edit');
+    Route::put('/{id}', [StoreController::class, 'update'])->name('stores.update');
+    Route::delete('/{id}', [StoreController::class, 'destroy'])->name('stores.destroy');
 });
 
-Route::get('/masters/wheat_rice_sugars/create', function () {
-    return view('masters.wheat_rice_sugars.create');
+Route::prefix('master/symbols')->group(function () {
+    Route::get('/', [SymbolController::class, 'index'])->name('symbols.index');
+    Route::get('/create', [SymbolController::class, 'create'])->name('symbols.create');
+    Route::post('/', [SymbolController::class, 'store'])->name('symbols.store');
+    Route::get('/{id}/edit', [SymbolController::class, 'edit'])->name('symbols.edit');
+    Route::put('/{id}', [SymbolController::class, 'update'])->name('symbols.update');
+    Route::delete('/{id}', [SymbolController::class, 'destroy'])->name('symbols.destroy');
 });
 
-Route::get('/masters/wheat_rice_sugars', 'Wheat_rice_sugarController@index');
-
-Route::get('/masters/wheat_rice_sugars/create', 'Wheat_rice_sugarController@show');
-
-Route::post('/masters/wheat_rice_sugars/create', 'Wheat_rice_sugarController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/wheat_rice_sugars/create');
-})->name('/masters/wheat_rice_sugars/create');
-
-Route::get('/masters/wheat_rice_sugars/finish', function () {
-    return view('masters.wheat_rice_sugars.finish');
+Route::prefix('master/tanks')->group(function () {
+    Route::get('/', [TankController::class, 'index'])->name('tanks.index');
+    Route::get('/create', [TankController::class, 'create'])->name('tanks.create');
+    Route::post('/', [TankController::class, 'store'])->name('tanks.store');
+    Route::get('/{id}/edit', [TankController::class, 'edit'])->name('tanks.edit');
+    Route::put('/{id}', [TankController::class, 'update'])->name('tanks.update');
+    Route::delete('/{id}', [TankController::class, 'destroy'])->name('tanks.destroy');
 });
 
-Route::get('/masters/wheat_rice_sugars/edit/{id}', 'Wheat_rice_sugarController@edit');
-
-Route::post('/masters/wheat_rice_sugars/finish/{id}', 'Wheat_rice_sugarController@finish');
-
-Route::post('/masters/wheat_rice_sugars/delete/{id}', 'Wheat_rice_sugarController@delete');
-
-// タンク
-Route::get('/masters/tanks', function () {
-    return view('masters.tanks');
+Route::prefix('master/items')->group(function () {
+    Route::get('/', [ItemController::class, 'index'])->name('items.index');
+    Route::get('/create', [ItemController::class, 'create'])->name('items.create');
+    Route::post('/', [ItemController::class, 'store'])->name('items.store');
+    Route::get('/{id}/edit', [ItemController::class, 'edit'])->name('items.edit');
+    Route::put('/{id}', [ItemController::class, 'update'])->name('items.update');
+    Route::delete('/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
 });
 
-Route::get('/masters/tanks/create', function () {
-    return view('masters.tanks.create');
+Route::prefix('master/users')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/', [UserController::class, 'store'])->name('users.store');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 });
-
-Route::get('/masters/tanks', 'tankController@index');
-
-Route::get('/masters/tanks/create', 'tankController@show');
-
-Route::post('/masters/tanks/create', 'tankController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/tanks/create');
-})->name('/masters/tanks/create');
-
-Route::get('/masters/tanks/finish', function () {
-    return view('masters.tanks.finish');
-});
-
-Route::get('/masters/tanks/edit/{id}', 'tankController@edit');
-
-Route::post('/masters/tanks/finish/{id}', 'tankController@finish');
-
-Route::post('/masters/tanks/delete/{id}', 'tankController@delete');
-
-// 副原料
-Route::get('/masters/auxiliary_raw_materials', function () {
-    return view('masters.auxiliary_raw_materials');
-});
-
-Route::get('/masters/auxiliary_raw_materials/create', function () {
-    return view('masters.auxiliary_raw_materials.create');
-});
-
-Route::get('/masters/auxiliary_raw_materials', 'auxiliary_raw_materialController@index');
-
-Route::get('/masters/auxiliary_raw_materials/create', 'auxiliary_raw_materialController@show');
-
-Route::post('/masters/auxiliary_raw_materials/create', 'auxiliary_raw_materialController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/auxiliary_raw_materials/create');
-})->name('/masters/auxiliary_raw_materials/create');
-
-Route::get('/masters/auxiliary_raw_materials/finish', function () {
-    return view('masters.auxiliary_raw_materials.finish');
-});
-
-Route::get('/masters/auxiliary_raw_materials/edit/{id}', 'auxiliary_raw_materialController@edit');
-
-Route::post('/masters/auxiliary_raw_materials/finish/{id}', 'auxiliary_raw_materialController@finish');
-
-Route::post('/masters/auxiliary_raw_materials/delete/{id}', 'auxiliary_raw_materialController@delete');
-
-// 製品・容器
-Route::get('/masters/product_containers', function () {
-    return view('masters.product_containers');
-});
-
-Route::get('/masters/product_containers/create', function () {
-    return view('masters.product_containers.create');
-});
-
-Route::get('/masters/product_containers', 'product_containerController@index');
-
-Route::get('/masters/product_containers/create', 'product_containerController@show');
-
-Route::post('/masters/product_containers/create', 'product_containerController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/product_containers/create');
-})->name('/masters/product_containers/create');
-
-Route::get('/masters/product_containers/finish', function () {
-    return view('masters.product_containers.finish');
-});
-
-Route::get('/masters/product_containers/edit/{id}', 'product_containerController@edit');
-
-Route::post('/masters/product_containers/finish/{id}', 'product_containerController@finish');
-
-Route::post('/masters/product_containers/delete/{id}', 'product_containerController@delete');
-
-// 取引先
-Route::get('/masters/suppliers', function () {
-    return view('masters.suppliers');
-});
-
-Route::get('/masters/suppliers/create', function () {
-    return view('masters.suppliers.create');
-});
-
-Route::get('/masters/suppliers', 'supplierController@index');
-
-Route::get('/masters/suppliers/create', 'supplierController@show');
-
-Route::post('/masters/suppliers/create', 'supplierController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/suppliers/create');
-})->name('/masters/suppliers/create');
-
-Route::get('/masters/suppliers/finish', function () {
-    return view('masters.suppliers.finish');
-});
-
-Route::get('/masters/suppliers/edit/{id}', 'supplierController@edit');
-
-Route::post('/masters/suppliers/finish/{id}', 'supplierController@finish');
-
-Route::post('/masters/suppliers/delete/{id}', 'supplierController@delete');
-
-// 基本情報
-Route::get('/masters/basic_informations', function () {
-    return view('masters.basic_informations');
-});
-
-Route::get('/masters/basic_informations/create', function () {
-    return view('masters.basic_informations.create');
-});
-
-Route::get('/masters/basic_informations', 'basic_informationController@index');
-
-Route::get('/masters/basic_informations/create', 'basic_informationController@show');
-
-Route::post('/masters/basic_informations/create', 'basic_informationController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/basic_informations/create');
-})->name('/masters/basic_informations/create');
-
-Route::get('/masters/basic_informations/finish', function () {
-    return view('masters.basic_informations.finish');
-});
-
-Route::get('/masters/basic_informations/edit/{id}', 'basic_informationController@edit');
-
-Route::post('/masters/basic_informations/finish/{id}', 'basic_informationController@finish');
-
-Route::post('/masters/basic_informations/delete/{id}', 'basic_informationController@delete');
-
-// 記号
-Route::get('/masters/symbols', function () {
-    return view('masters.symbols');
-});
-
-Route::get('/masters/symbols/create', function () {
-    return view('masters.symbols.create');
-});
-
-Route::get('/masters/symbols', 'supplierController@index');
-
-Route::get('/masters/symbols/create', 'symbolController@show');
-
-Route::post('/masters/symbols/create', 'symbolController@add')->name('submit');
-
-Route::get('/', function () {
-    return view('/masters/symbols/create');
-})->name('/masters/symbols/create');
-
-Route::get('/masters/symbols/finish', function () {
-    return view('masters.symbols.finish');
-});
-
-Route::get('/masters/symbols/edit/{id}', 'symbolController@edit');
-
-Route::post('/masters/symbols/finish/{id}', 'symbolController@finish');
-
-Route::post('/masters/symbols/delete/{id}', 'symbolController@delete');
