@@ -20,29 +20,29 @@ class ItemController extends Controller
 
     public function store(Request $request)
     {
-      $validated = $request->validate([
-        'name' => 'required|string|max:50',
-        'beer_style' => 'required|string|max:50',
-        'abv' => 'required|numeric|min:0|max:100',
-        'ibu' => 'required|integer|min:0|max:255',
-    ], [
-        'name.required' => '商品名は必須です',
-        'name.max' => '商品名は50文字以内で入力してください',
-    
-        'beer_style.required' => 'ビアスタイルは必須です',
-        'beer_style.max' => 'ビアスタイルは50文字以内で入力してください',
-    
-        'abv.required' => 'ABV（アルコール度数）は必須です',
-        'abv.numeric' => 'ABVは数値で入力してください',
-        'abv.min' => 'ABVは0以上で入力してください',
-        'abv.max' => 'ABVは100以下で入力してください',
-    
-        'ibu.required' => 'IBUは必須です',
-        'ibu.integer' => 'IBUは整数で入力してください',
-        'ibu.min' => 'IBUは0以上で入力してください',
-        'ibu.max' => 'IBUは255以下で入力してください',
-    ]);
-    
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'beer_style' => 'required|string|max:50',
+            'abv' => 'required|numeric|min:0|max:100',
+            'ibu' => 'required|integer|min:0|max:255',
+        ], [
+            'name.required' => '商品名は必須です',
+            'name.max' => '商品名は50文字以内で入力してください',
+
+            'beer_style.required' => 'ビアスタイルは必須です',
+            'beer_style.max' => 'ビアスタイルは50文字以内で入力してください',
+
+            'abv.required' => 'ABV（アルコール度数）は必須です',
+            'abv.numeric' => 'ABVは数値で入力してください',
+            'abv.min' => 'ABVは0以上で入力してください',
+            'abv.max' => 'ABVは100以下で入力してください',
+
+            'ibu.required' => 'IBUは必須です',
+            'ibu.integer' => 'IBUは整数で入力してください',
+            'ibu.min' => 'IBUは0以上で入力してください',
+            'ibu.max' => 'IBUは255以下で入力してください',
+        ]);
+
 
         $validated['delete_flg'] = false;
 
@@ -59,29 +59,29 @@ class ItemController extends Controller
 
     public function update(Request $request, $id)
     {
-      $validated = $request->validate([
-        'name' => 'required|string|max:50',
-        'beer_style' => 'required|string|max:50',
-        'abv' => 'required|numeric|min:0|max:100',
-        'ibu' => 'required|integer|min:0|max:255',
-    ], [
-        'name.required' => '商品名は必須です',
-        'name.max' => '商品名は50文字以内で入力してください',
-    
-        'beer_style.required' => 'ビアスタイルは必須です',
-        'beer_style.max' => 'ビアスタイルは50文字以内で入力してください',
-    
-        'abv.required' => 'ABV（アルコール度数）は必須です',
-        'abv.numeric' => 'ABVは数値で入力してください',
-        'abv.min' => 'ABVは0以上で入力してください',
-        'abv.max' => 'ABVは100以下で入力してください',
-    
-        'ibu.required' => 'IBUは必須です',
-        'ibu.integer' => 'IBUは整数で入力してください',
-        'ibu.min' => 'IBUは0以上で入力してください',
-        'ibu.max' => 'IBUは255以下で入力してください',
-    ]);
-    
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'beer_style' => 'required|string|max:50',
+            'abv' => 'required|numeric|min:0|max:100',
+            'ibu' => 'required|integer|min:0|max:255',
+        ], [
+            'name.required' => '商品名は必須です',
+            'name.max' => '商品名は50文字以内で入力してください',
+
+            'beer_style.required' => 'ビアスタイルは必須です',
+            'beer_style.max' => 'ビアスタイルは50文字以内で入力してください',
+
+            'abv.required' => 'ABV（アルコール度数）は必須です',
+            'abv.numeric' => 'ABVは数値で入力してください',
+            'abv.min' => 'ABVは0以上で入力してください',
+            'abv.max' => 'ABVは100以下で入力してください',
+
+            'ibu.required' => 'IBUは必須です',
+            'ibu.integer' => 'IBUは整数で入力してください',
+            'ibu.min' => 'IBUは0以上で入力してください',
+            'ibu.max' => 'IBUは255以下で入力してください',
+        ]);
+
 
         $item = Item::findOrFail($id);
         $item->update($validated);

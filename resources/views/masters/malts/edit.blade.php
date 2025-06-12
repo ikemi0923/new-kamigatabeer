@@ -14,20 +14,22 @@
     </div>
   </div>
 
-  <!-- @if (session('msg'))
-    <div class="alert alert-success" role="alert">
-      {{ session('msg') }}
-    </div>
-  @endif -->
+  @if (session('msg'))
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+  </div>
+  @endif
+
 
   @if ($errors->any())
-    <div class="alert alert-danger">
-      <ul>
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+  <div class="alert alert-danger">
+    <ul>
+      @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
   @endif
 
   <form method="POST" action="{{ url('/master/malts/' . $malt->id) }}" id="editForm">
@@ -72,7 +74,7 @@
   <div class="d-flex justify-content-start mt-5">
     <div class="align-self-center mr-auto">
       <form method="POST" action="{{ url('/master/malts/' . $malt->id) }}"
-            onsubmit="return confirm('本当に削除しますか？')">
+        onsubmit="return confirm('本当に削除しますか？')">
         @csrf
         @method('DELETE')
         <button type="submit" class="btn btn-outline-danger">この麦芽を削除</button>

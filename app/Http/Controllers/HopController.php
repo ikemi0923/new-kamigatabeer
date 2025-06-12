@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Hops;
+use App\Models\Hop;
 use Illuminate\Support\Facades\Validator;
 
 class HopController extends Controller
 {
     public function index()
     {
-        $hops = Hops::paginate(10);
+        $hops = Hop::paginate(10);
         return view('masters.hops.index', compact('hops'));
     }
 
@@ -31,16 +31,13 @@ class HopController extends Controller
         $messages = [
             'name.required' => '名前は必須です',
             'name.max' => '名前は20文字以内で入力してください',
-        
             'maker.required' => 'メーカーは必須です',
             'maker.max' => 'メーカーは20文字以内で入力してください',
-        
             'alpha.required' => 'アルファ酸は必須です',
             'alpha.numeric' => 'アルファ酸は数値で入力してください',
             'alpha.min' => 'アルファ酸は0以上の数値で入力してください',
             'alpha.max' => 'アルファ酸は100以下の数値で入力してください',
         ];
-        
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -50,7 +47,7 @@ class HopController extends Controller
                 ->withInput();
         }
 
-        Hops::create([
+        Hop::create([
             'name' => $request->name,
             'maker' => $request->maker,
             'alpha' => $request->alpha,
@@ -62,7 +59,7 @@ class HopController extends Controller
 
     public function edit($id)
     {
-        $hop = Hops::findOrFail($id);
+        $hop = Hop::findOrFail($id);
         return view('masters.hops.edit', compact('hop'));
     }
 
@@ -78,16 +75,13 @@ class HopController extends Controller
         $messages = [
             'name.required' => '名前は必須です',
             'name.max' => '名前は20文字以内で入力してください',
-        
             'maker.required' => 'メーカーは必須です',
             'maker.max' => 'メーカーは20文字以内で入力してください',
-        
             'alpha.required' => 'アルファ酸は必須です',
             'alpha.numeric' => 'アルファ酸は数値で入力してください',
             'alpha.min' => 'アルファ酸は0以上の数値で入力してください',
             'alpha.max' => 'アルファ酸は100以下の数値で入力してください',
         ];
-        
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -97,7 +91,7 @@ class HopController extends Controller
                 ->withInput();
         }
 
-        $hop = Hops::findOrFail($id);
+        $hop = Hop::findOrFail($id);
         $hop->update([
             'name' => $request->name,
             'maker' => $request->maker,
@@ -110,9 +104,8 @@ class HopController extends Controller
 
     public function destroy($id)
     {
-        $hop = Hops::findOrFail($id);
+        $hop = Hop::findOrFail($id);
         $hop->delete();
-
-        return redirect('/master/hops')->with('success', '削除しました');
+        return redirect('/master/hops')->with('msg', '削除しました');
     }
 }

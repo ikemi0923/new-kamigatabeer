@@ -5,10 +5,12 @@
 
   {{-- 成功メッセージ --}}
   @if (session('msg'))
-    <script>
-      alert(@json(session('msg')));
-    </script>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+  </div>
   @endif
+
 
   <div class="d-flex justify-content-start mb-3">
     <div class="mr-auto">
@@ -40,7 +42,7 @@
         <td class="text-center align-middle">{{ $productContainer->capacity }}</td>
         <td class="text-center align-middle">
           @if ($productContainer->product_container_display_flg)
-            <i class="fas fa-check"></i>
+          <i class="fas fa-check"></i>
           @endif
         </td>
         <td class="text-center align-middle">

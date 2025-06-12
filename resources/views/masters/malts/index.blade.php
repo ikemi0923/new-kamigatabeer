@@ -4,11 +4,11 @@
 <div class="container">
 
 @if (session('msg'))
-    <script>
-      alert(@json(session('msg')));
-    </script>
-  @endif
-
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+  </div>
+@endif
 
   <div class="d-flex justify-content-start mb-3">
     <div class="mr-auto">

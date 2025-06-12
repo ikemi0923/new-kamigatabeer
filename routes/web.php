@@ -17,6 +17,7 @@ use App\Http\Controllers\SymbolController;
 use App\Http\Controllers\TankController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RecipeController;
 
 // ログイン関係
 Route::get('/', [LoginController::class, 'showLoginForm']);
@@ -159,4 +160,13 @@ Route::prefix('master/users')->group(function () {
     Route::get('/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+});
+
+Route::prefix('recipes')->group(function () {
+    Route::get('/', [RecipeController::class, 'index'])->name('recipes.index');
+    Route::get('/create', [RecipeController::class, 'create'])->name('recipes.create');
+    Route::post('/', [RecipeController::class, 'store'])->name('recipes.store');
+    Route::get('/{id}/edit', [RecipeController::class, 'edit'])->name('recipes.edit');
+    Route::put('/{id}', [RecipeController::class, 'update'])->name('recipes.update');
+    Route::delete('/{id}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
 });

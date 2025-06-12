@@ -5,10 +5,14 @@
 
   {{-- 成功メッセージ --}}
   @if (session('msg'))
-    <script>
-      alert(@json(session('msg')));
-    </script>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="閉じる">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   @endif
+
 
   {{-- ヘッダーとボタン（左右に分離） --}}
   <div class="d-flex justify-content-between mb-3">
@@ -35,14 +39,14 @@
     </thead>
     <tbody class="bg-white">
       @foreach ($users as $user)
-        <tr>
-          <td class="text-center align-middle">{{ $user->user_id }}</td>
-          <td class="text-center align-middle">{{ $user->store->store_name ?? '' }}</td>
-          <td class="text-center align-middle">{{ $user->is_admin ? '〇' : '' }}</td>
-          <td class="text-center align-middle">
-            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-primary">編集</a>
-          </td>
-        </tr>
+      <tr>
+        <td class="text-center align-middle">{{ $user->user_id }}</td>
+        <td class="text-center align-middle">{{ $user->store->store_name ?? '' }}</td>
+        <td class="text-center align-middle">{{ $user->is_admin ? '〇' : '' }}</td>
+        <td class="text-center align-middle">
+          <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-primary">編集</a>
+        </td>
+      </tr>
       @endforeach
     </tbody>
   </table>

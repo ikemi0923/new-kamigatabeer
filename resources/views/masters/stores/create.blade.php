@@ -3,18 +3,23 @@
 @section('content')
 <div class="container">
 
+  {{-- 成功メッセージ --}}
   @if (session('msg'))
-    <script>alert(@json(session('msg')));</script>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+  </div>
   @endif
 
+
   @if ($errors->any())
-    <div class="alert alert-danger">
-      <ul class="mb-0">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
   @endif
 
   <form method="POST" action="{{ route('stores.store') }}">
@@ -44,12 +49,12 @@
       <div class="col-sm-8">
         <div class="row">
           @foreach ($symbols as $symbol)
-            <div class="col-md-3">
-              <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" name="symbol_ids[]" value="{{ $symbol->id }}" id="symbol{{ $symbol->id }}">
-                <label class="form-check-label" for="symbol{{ $symbol->id }}">{{ $symbol->symbol_name }}</label>
-              </div>
+          <div class="col-md-3">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="symbol_ids[]" value="{{ $symbol->id }}" id="symbol{{ $symbol->id }}">
+              <label class="form-check-label" for="symbol{{ $symbol->id }}">{{ $symbol->symbol_name }}</label>
             </div>
+          </div>
           @endforeach
         </div>
       </div>

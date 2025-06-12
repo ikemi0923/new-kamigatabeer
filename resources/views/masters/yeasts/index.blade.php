@@ -3,13 +3,17 @@
 @section('content')
 <div class="container">
 
-{{-- 成功メッセージ --}}
+  {{-- 成功メッセージ --}}
   @if (session('msg'))
-    <script>
-      alert(@json(session('msg')));
-    </script>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="閉じる">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   @endif
-  
+
+
   <div class="d-flex justify-content-start mb-3">
     <div class="mr-auto">
       <span class="span-header">酵母一覧</span>
@@ -40,7 +44,7 @@
         <td class="text-center align-middle">{{ $yeast->maker }}</td>
         <td class="text-center align-middle">
           @if ($yeast->yeast_display_flg)
-            <i class="fas fa-check"></i>
+          <i class="fas fa-check"></i>
           @endif
         </td>
         <td class="text-center align-middle">

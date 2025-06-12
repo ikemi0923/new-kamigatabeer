@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Yeasts;
+use App\Models\Yeast;
 use Illuminate\Support\Facades\Validator;
 
 class YeastController extends Controller
 {
     public function index()
     {
-        $yeasts = Yeasts::paginate(10);
+        $yeasts = Yeast::paginate(10);
         return view('masters.yeasts.index', compact('yeasts'));
     }
 
@@ -41,7 +41,7 @@ class YeastController extends Controller
                 ->withInput();
         }
 
-        Yeasts::create([
+        Yeast::create([
             'name' => $request->name,
             'maker' => $request->maker,
             'yeast_display_flg' => $request->has('yeast_display_flg') ? 1 : 0,
@@ -52,7 +52,7 @@ class YeastController extends Controller
 
     public function edit($id)
     {
-        $yeast = Yeasts::findOrFail($id);
+        $yeast = Yeast::findOrFail($id);
         return view('masters.yeasts.edit', compact('yeast'));
     }
 
@@ -78,7 +78,7 @@ class YeastController extends Controller
                 ->withInput();
         }
 
-        $yeast = Yeasts::findOrFail($id);
+        $yeast = Yeast::findOrFail($id);
         $yeast->update([
             'name' => $request->name,
             'maker' => $request->maker,
@@ -90,7 +90,7 @@ class YeastController extends Controller
 
     public function destroy($id)
     {
-        Yeasts::destroy($id);
+        Yeast::destroy($id);
         return redirect('/master/yeasts')->with('msg', '削除しました');
     }
 }

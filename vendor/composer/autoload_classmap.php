@@ -44,6 +44,7 @@ return array(
     'App\\Models\\Item' => $baseDir . '/app/Models/Item.php',
     'App\\Models\\Malts' => $baseDir . '/app/Models/Malts.php',
     'App\\Models\\ProductContainer' => $baseDir . '/app/Models/ProductContainer.php',
+    'App\\Models\\Recipe' => $baseDir . '/app/Models/Recipe.php',
     'App\\Models\\Store' => $baseDir . '/app/Models/Store.php',
     'App\\Models\\Supplier' => $baseDir . '/app/Models/Supplier.php',
     'App\\Models\\Symbol' => $baseDir . '/app/Models/Symbol.php',

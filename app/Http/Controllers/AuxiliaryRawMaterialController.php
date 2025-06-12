@@ -32,7 +32,7 @@ class AuxiliaryRawMaterialController extends Controller
             'maker.required' => 'メーカーは必須です',
             'name.max' => '名前は20文字以内で入力してください',
             'maker.max' => 'メーカーは20文字以内で入力してください',
-        ];        
+        ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -70,7 +70,7 @@ class AuxiliaryRawMaterialController extends Controller
             'maker.required' => 'メーカーは必須です',
             'name.max' => '名前は20文字以内で入力してください',
             'maker.max' => 'メーカーは20文字以内で入力してください',
-        ];        
+        ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 

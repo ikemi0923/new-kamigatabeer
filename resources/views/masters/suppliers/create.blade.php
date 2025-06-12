@@ -4,9 +4,12 @@
 <div class="container">
 
   @if (session('msg'))
-    <script>
-      alert(@json(session('msg')));
-    </script>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="閉じる">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   @endif
 
   <div class="d-flex justify-content-start mb-3">
@@ -22,13 +25,13 @@
   </div>
 
   @if ($errors->any())
-    <div class="alert alert-danger">
-      <ul class="mb-0">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
   @endif
 
   <form method="POST" id="createForm" action="{{ route('suppliers.store') }}">
@@ -54,7 +57,7 @@
         <input id="category" type="text" class="form-control" name="category" value="{{ old('category') }}">
       </div>
     </div>
-<!-- 
+    <!-- 
     <div class="form-group row">
       <div class="col-md-6 offset-md-2">
         <div class="form-check">

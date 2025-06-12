@@ -5,8 +5,14 @@
 
   {{-- 成功メッセージ --}}
   @if (session('msg'))
-    <script>alert(@json(session('msg')));</script>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('msg') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="閉じる">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   @endif
+
 
   {{-- タイトルとボタン --}}
   <div class="d-flex justify-content-between mb-3">
@@ -21,13 +27,13 @@
 
   {{-- エラー表示 --}}
   @if ($errors->any())
-    <div class="alert alert-danger">
-      <ul class="mb-0">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
   @endif
 
   {{-- 中央寄せフォーム --}}
@@ -47,7 +53,7 @@
 
         {{-- パスワード --}}
         <div class="mb-3 row">
-          <label class="col-sm-3 col-form-label">  パスワード <span class="badge bg-danger text-white">必須</span></label>
+          <label class="col-sm-3 col-form-label"> パスワード <span class="badge bg-danger text-white">必須</span></label>
           <div class="col-sm-9">
             <input type="password" name="password" class="form-control">
           </div>
@@ -67,9 +73,9 @@
           <div class="col-sm-9">
             <select name="store_id" class="form-select">
               @foreach ($stores as $store)
-                <option value="{{ $store->id }}" {{ old('store_id') == $store->id ? 'selected' : '' }}>
-                  {{ $store->store_name }}
-                </option>
+              <option value="{{ $store->id }}" {{ old('store_id') == $store->id ? 'selected' : '' }}>
+                {{ $store->store_name }}
+              </option>
               @endforeach
             </select>
           </div>

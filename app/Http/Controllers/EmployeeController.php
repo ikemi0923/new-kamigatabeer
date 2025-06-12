@@ -29,13 +29,13 @@ class EmployeeController extends Controller
             'first_name.required' => '名は必須です',
             'first_name.max' => '名は20文字以内で入力してください',
         ]);
-    
+
         $validated['store_id'] = 1;
         Employee::create($validated);
-    
+
         return redirect()->route('employees.index')->with('msg', '保存しました');
     }
-    
+
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
@@ -53,15 +53,15 @@ class EmployeeController extends Controller
             'first_name.required' => '名は必須です',
             'first_name.max' => '名は20文字以内で入力してください',
         ]);
-    
+
         $validated['store_id'] = 1;
-    
+
         $employee = Employee::findOrFail($id);
         $employee->update($validated);
-    
+
         return redirect()->route('employees.index')->with('msg', '更新しました');
     }
-    
+
     public function destroy($id)
     {
         $employee = Employee::findOrFail($id);
